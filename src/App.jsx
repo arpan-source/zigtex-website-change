@@ -18,6 +18,7 @@ import { UseCasesView } from './views/UseCasesView';
 import { PricingView } from './views/PricingView';
 import { ResourcesView } from './views/ResourcesView';
 import { CompanyView } from './views/CompanyView';
+import { NotFoundView } from './views/NotFoundView';
 import { SEO } from './components/SEO';
 
 // Helper to scroll to top on route change
@@ -315,6 +316,11 @@ export default function App() {
             <Route path="/company" element={
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
                 <CompanyView navigateTo={navigateTo} onCTA={handleCTA} />
+              </motion.div>
+            } />
+            <Route path="*" element={
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.3 }}>
+                <NotFoundView navigateTo={navigateTo} />
               </motion.div>
             } />
           </Routes>

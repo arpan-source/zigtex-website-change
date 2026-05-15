@@ -1,5 +1,4 @@
 import { useRef, useEffect, useState } from 'react';
-import { Renderer, Program, Triangle, Mesh } from 'ogl';
 
 /**
  * LightRays Background Component
@@ -93,6 +92,9 @@ export function LightRays({
     }
 
     const initializeWebGL = async () => {
+      // Dynamic import of ogl to prevent SSR issues
+      const { Renderer, Program, Triangle, Mesh } = await import('ogl');
+      
       if (!containerRef.current) return;
       await new Promise(resolve => setTimeout(resolve, 10));
       if (!containerRef.current) return;

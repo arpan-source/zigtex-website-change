@@ -1,31 +1,28 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { pathToFileURL } from 'url';
 import express from 'express';
+import compression from 'compression';
+import serveStatic from 'serve-static';
 import { createServer as createViteServer } from 'vite';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 async function createServer() {
   const app = express();
   const PORT = 3000;
 
-  // Create Vite server in middleware mode and configure the app type as
-  // 'custom', disabling Vite's own HTML serving logic so parent server
-  // can take control
-  let vite;
   const isProd = process.env.NODE_ENV === 'production';
+  const root = process.cwd();
+  let vite: any;
 
   if (!isProd) {
     vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'custom'
     });
-    // use vite's connect instance as middleware
     app.use(vite.middlewares);
   } else {
-    app.use((await import('compression')).default());
-    app.use((await import('serve-static')).default(path.resolve(__dirname, 'dist/client'), {
+    app.use(compression());
+    app.use(serveStatic(path.resolve(root, 'dist/client'), {
       index: false
     }));
   }
@@ -38,17 +35,16 @@ async function createServer() {
       let template;
       let render;
       if (!isProd) {
-        template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
-        // 2. Apply Vite HTML transforms. This injects Vite HMR client, and
-        //    also applies HTML transforms from Vite plugins, e.g. global preambles
-        //    from @vitejs/plugin-react
+        template = fs.readFileSync(path.resolve(root, 'index.html'), 'utf-8');
+        // 2. Apply Vite HTML transforms
         template = await vite.transformIndexHtml(url, template);
-        // 3. Load the server entry. vite.ssrLoadModule automatically transforms
-        //    your ESM source code to be usable in Node.js!
+        // 3. Load the server entry
         render = (await vite.ssrLoadModule('/src/entry-server.jsx')).render;
       } else {
-        template = fs.readFileSync(path.resolve(__dirname, 'dist/client/index.html'), 'utf-8');
-        render = (await import('./dist/server/entry-server.js')).render;
+        template = fs.readFileSync(path.resolve(root, 'dist/client/index.html'), 'utf-8');
+        // Load the SSR bundle as a file URL for robust ESM import in CJS context
+        const bundlePath = path.resolve(root, 'dist/server/entry-server.js');
+        render = (await import(pathToFileURL(bundlePath).href)).render;
       }
 
       // 4. render the app HTML.

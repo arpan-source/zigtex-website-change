@@ -27,7 +27,7 @@ export const PricingView = ({ navigateTo, onCTA }) => {
     { capability: 'GTM-Aligned Leads', solo: 'Basic', growth: '300 / mo', scale: '500 / mo' },
     { capability: 'SDR Support', solo: 'Self-Serve', growth: 'Shared', scale: 'Dedicated' },
     { capability: 'Technical Support', solo: 'Email', growth: 'Standard', scale: 'Priority' },
-    { capability: 'Account Management', solo: 'No', solo: 'No', scale: 'Dedicated' },
+    { capability: 'Account Management', solo: 'No', scale: 'Dedicated' },
     { capability: 'BANT Qualified Meetings', solo: 'Self-Serve', growth: 'Performance-Based', scale: '12 / Year (Guaranteed)' },
   ];
 
