@@ -1,0 +1,6 @@
+{
+  "name": "ZigTex website",
+  "description": "Zigtex: The outcome-based GTM platform for founders and B2B teams. We combine advanced automation with managed SDRs to build a pipeline you can count on.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
